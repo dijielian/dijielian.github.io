@@ -270,7 +270,24 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
 }
 @media (max-width:640px){
   .item .sub{flex-direction:column;gap:.15rem}
-  h1{font-size:13.2vw}
+  /* phone: one column, told as a sequence -
+     language, name, who I am, links, then the work */
+  .page{display:flex;flex-direction:column;min-height:100svh}
+  .bar,main,.home{display:contents}
+  .bar .lang{order:1;align-self:flex-end}
+  h1{order:2;font-size:25vw;line-height:.84;margin-top:clamp(2.5rem,9vh,5rem)}
+  h1 span{display:block}
+  .intro{order:3;margin-top:clamp(3rem,9vh,5rem);padding:0}
+  .tag{font-size:1.25rem}
+  .about{font-size:1.05rem;max-width:26ch}
+  .bar nav{order:4;margin-top:1.5rem;display:flex;flex-direction:row;flex-wrap:wrap;gap:.6rem 1.2rem;font-size:.95rem}
+  .bar nav a{color:var(--white);border-bottom:1px solid #444}
+  .work{order:5;margin-top:clamp(2.5rem,7vh,4rem);align-self:stretch;width:100%}
+  .cv{align-self:stretch}
+  .cv{order:5}
+  .item{padding:1.4rem 0}
+  .item .title{font-size:2.6rem}
+  footer{order:6;margin-top:4rem}
 }
 @media (max-width:480px){
   .cv .entry{grid-template-columns:1fr}
@@ -296,7 +313,7 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
     </div>
   </header>
 
-  <h1 id="name"><a href="index.html" aria-label="Dijie Lian, home">Dijie Lian</a></h1>
+  <h1 id="name"><a href="index.html" aria-label="Dijie Lian, home"><span class="n1">Dijie</span> <span class="n2">Lian</span></a></h1>
 
   
   <main>
