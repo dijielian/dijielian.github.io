@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dijielian.com/sitemap.xml
