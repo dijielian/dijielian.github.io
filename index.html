@@ -126,7 +126,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
 /* ---------- Top bar ---------- */
 .bar{position:relative;z-index:4;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;font-size:.9rem}
-.bar nav,.bar .lang{display:flex;flex-wrap:wrap;gap:.5rem clamp(1rem,2.5vw,2.25rem)}
+.bar nav,.bar .lang{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem clamp(1rem,2.5vw,2.25rem)}
+.bar nav a,.bar .lang button{line-height:1.3}  /* one line height for Latin and Chinese, so 简历 sits on the same baseline as LinkedIn */
 .bar nav a{border:0;color:var(--grey);transition:color .2s}
 .bar nav a:hover,.bar nav a[aria-current="page"]{color:var(--white)}
 .bar .lang button{color:var(--grey);font-size:.85rem}
@@ -305,6 +306,22 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
 @media (max-width:480px){
   .cv .entry{grid-template-columns:1fr}
   .bar{flex-wrap:wrap}
+}
+
+/* ---------- Phone: the name folds into the DL mark as you scroll (design system: NameMorph) ---------- */
+.nm-mark,.nm-ground{display:none}
+@media (max-width:640px){
+  html.nm .bar .lang{position:fixed;top:calc(env(safe-area-inset-top,0px) + var(--pad));right:var(--pad);z-index:7}
+  html.nm h1{margin-top:calc(clamp(2.5rem,9vh,5rem) + 1.1875rem)}  /* the language switch left the flow; keep the name where it was */
+  html.nm h1 a{color:transparent}                                  /* the drawn name stands in; the real one stays for links and screen readers */
+  html.nm .nm-ground{display:block;position:fixed;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 56px);background:var(--black);border-bottom:1px solid var(--line);opacity:0;z-index:5;pointer-events:none}
+  html.nm .nm-mark{display:block;position:fixed;left:0;top:0;z-index:6;border:0;pointer-events:none}
+  html.nm .nm-mark.home{pointer-events:auto}
+  html.nm .nm-mark svg{position:absolute;left:0;top:0;max-width:none;max-height:none;transform-origin:0 0;overflow:visible}
+  html.nm .nm-mark{width:0;height:0;overflow:visible}
+}
+@media (max-width:640px) and (prefers-reduced-motion:no-preference){
+  html.nm .nm-mark svg{animation:rise 1.1s cubic-bezier(.2,.7,.1,1) .1s backwards}
 }
 </style>
 </head>
@@ -588,6 +605,82 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
   document.querySelectorAll('[data-open]').forEach(function(b){
     b.addEventListener('click',function(){var d=document.getElementById(b.dataset.open);if(d&&d.showModal)d.showModal();});
   });
+})();
+</script>
+<div class="nm-ground" aria-hidden="true"></div>
+<a class="nm-mark" href="index.html" aria-hidden="true" tabindex="-1"><svg><g fill="#E2E2E2"></g></svg></a>
+<script>
+/* Phone only: DIJIE LIAN folds into the DL mark while you scroll, and unfolds when you scroll back.
+   IJIE and IAN retract into D and L together; the D lifts its bowl; the L rises under it and its stem
+   joins the D's. The mark ends 28px high in a 56px bar. Curve: ease-glide. */
+(function(){
+  var phone=matchMedia('(max-width:640px)'),reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  var NS='http://www.w3.org/2000/svg',H=320,T=64,HB=60,TA=68,GAP=28,LOGO_W=286,FOOT_W=278,MARK=28,BAR=56;
+  var cl=function(v){return Math.min(1,Math.max(0,v))},lerp=function(a,b,t){return a+(b-a)*t};
+  var io=function(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+  var h1=document.getElementById('name'),link=document.querySelector('.nm-mark'),svg=link.querySelector('svg'),g=svg.querySelector('g'),ground=document.querySelector('.nm-ground');
+  var built=false,FS,P,asc,cap,bearD,dR0,foot0,strips,dP,lP,range,safeTop;
+  function add(tag,a,parent){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);(parent||g).appendChild(e);return e}
+  function build(){
+    var c=document.createElement('canvas').getContext('2d');c.font='720 1000px Archivo';if('fontStretch' in c)c.fontStretch='expanded';
+    var mI=c.measureText('I'),mD=c.measureText('D');
+    cap=mI.actualBoundingBoxAscent/1000;FS=H/cap;                           // font size (in mark units) whose cap height is 320
+    asc=(mD.fontBoundingBoxAscent||930)/1000;var desc=(mD.fontBoundingBoxDescent||240)/1000;
+    var lead=(0.84-(asc+desc))/2;asc=lead+asc;                                // baseline below the line top, in em (line-height .84)
+    var sty='font:720 '+FS+'px Archivo;font-stretch:125%';
+    var adv=function(ch){var t=add('text',{style:sty});t.textContent=ch;var w=t.getComputedTextLength();t.remove();return w};
+    var track=-0.025*FS;bearD=-mD.actualBoundingBoxLeft/1000*FS;var sb=0.055*H;
+    dR0=adv('D')+track-2*sb;foot0=adv('L')+track-2*sb;P=0.84*FS;
+    var defs=add('defs',{});
+    strips=[['I','J','I','E'],['I','A','N']].map(function(w,n){
+      var cp=add('clipPath',{id:'nmc'+n,clipPathUnits:'userSpaceOnUse'},defs),r=add('rect',{y:-2*H,height:5*H,width:99999},cp);
+      var outer=add('g',{'clip-path':'url(#nmc'+n+')'}),inner=add('g',{},outer),x=0;
+      w.forEach(function(ch){var e=add('text',{x:x,y:H,style:sty},inner);e.textContent=ch;x+=adv(ch)+track});
+      return{r:r,inner:inner,outer:outer,w:x,sb:sb};
+    });
+    dP=add('path',{'fill-rule':'evenodd'});lP=add('path',{});
+    var W=Math.max(dR0+sb+strips[0].w,foot0+sb+strips[1].w);
+    svg.setAttribute('viewBox','0 0 '+W+' '+(P+H));svg.style.width=W+'px';svg.style.height=(P+H)+'px';
+    built=true;
+  }
+  var k0,xName,yNameDoc,pad,last=-1;
+  function measure(){                                                         // layout is read only here (load, resize), never while scrolling
+    safeTop=parseFloat(getComputedStyle(document.documentElement).paddingTop)||0;
+    var r=h1.getBoundingClientRect(),fsPx=parseFloat(getComputedStyle(h1).fontSize);
+    range=(r.top+scrollY)+r.height*0.85;
+    k0=fsPx/FS;xName=r.left+bearD*k0;yNameDoc=r.top+scrollY+(asc-cap)*fsPx;
+    pad=parseFloat(getComputedStyle(document.querySelector('.page')).paddingLeft);
+    last=-1;
+  }
+  function draw(){
+    if(!built||!phone.matches)return;
+    var p=cl(scrollY/range);if(reduce.matches)p=p<.5?0:1;
+    if(p===last&&p===1)return;last=p;                                        // folded and staying folded: nothing to redraw
+    var sI=io(cl(p/.45)),jb=io(cl((p-.22)/.4)),jl=io(cl((p-.3)/.62)),sb=strips[0].sb;
+    var yb=lerp(H,H-HB-GAP,jb),dR=lerp(dR0,LOGO_W,jb),R=yb/2,xa=dR-R,ri=(yb-2*HB)/2,xi=dR-TA-ri;
+    dP.setAttribute('d','M0 0 H'+xa+' A'+R+' '+R+' 0 0 1 '+xa+' '+yb+' H'+T+' V'+H+' H0 Z M'+T+' '+HB+' H'+xi+' A'+ri+' '+ri+' 0 0 1 '+xi+' '+(yb-HB)+' H'+T+' Z');
+    var ly=lerp(P,0,jl),fw=lerp(foot0,FOOT_W,jl);
+    lP.setAttribute('d','M0 '+ly+' H'+T+' V'+(ly+H-HB)+' H'+fw+' V'+(ly+H)+' H0 Z');
+    [[dR0+sb,0],[fw+sb*(1-jl),ly]].forEach(function(a,n){var s=strips[n],vis=s.w*(1-sI);
+      s.r.setAttribute('x',a[0]);s.inner.setAttribute('transform','translate('+(a[0]+vis-s.w)+' '+a[1]+')');s.outer.style.opacity=Math.pow(vis/s.w,1.3)});
+    // from the name's place to the bar
+    var y0=yNameDoc-scrollY;                                                  // where the real name's cap top sits now
+    var q=io(p),k=lerp(k0,MARK/H,q),yBar=safeTop+(BAR-MARK)/2;
+    var y=lerp(Math.max(y0,yBar),yBar,q),x=lerp(xName,pad,q);
+    svg.style.transform='translate('+x+'px,'+y+'px) scale('+k+')';
+    ground.style.opacity=cl((p-.6)/.4);
+    link.classList.toggle('home',p>.9);
+  }
+  var raf=0;function tick(){raf=0;draw()}
+  function onScroll(){if(!raf)raf=requestAnimationFrame(tick)}
+  function setup(){
+    var on=phone.matches;document.documentElement.classList.toggle('nm',on);
+    if(!on)return;
+    document.fonts.load('720 100px Archivo').then(function(){if(!built)build();measure();draw()});
+  }
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',function(){if(phone.matches&&built){measure();draw()}});
+  phone.addEventListener('change',setup);setup();
 })();
 </script>
 </body>
