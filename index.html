@@ -19,9 +19,10 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="de_DE">
 <meta property="og:locale:alternate" content="zh_CN">
-<!-- TODO: add a 1200x630 preview image, then uncomment the two lines below
-<meta property="og:image" content="https://dijielian.com/og-image.jpg">
-<meta name="twitter:image" content="https://dijielian.com/og-image.jpg"> -->
+<meta property="og:image" content="https://dijielian.com/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://dijielian.com/og-home.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Dijie Lian | Industrial Designer, Munich">
 <meta name="twitter:description" content="Dijie Lian is an industrial designer in Munich, currently busy designing humanoid and collaborative robots. Selected work: Agile ONE, BAR 01, plyon DevKit and Newtrit.">
@@ -308,21 +309,19 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
   .bar{flex-wrap:wrap}
 }
 
-/* ---------- Phone: the name folds into the DL mark as you scroll (design system: NameMorph) ---------- */
-.nm-mark,.nm-ground{display:none}
-@media (max-width:640px){
-  html.nm .bar .lang{position:fixed;top:calc(env(safe-area-inset-top,0px) + var(--pad));right:var(--pad);z-index:7}
-  html.nm h1{margin-top:calc(clamp(2.5rem,9vh,5rem) + 1.1875rem)}  /* the language switch left the flow; keep the name where it was */
-  html.nm h1 a{color:transparent}                                  /* the drawn name stands in; the real one stays for links and screen readers */
-  html.nm .nm-ground{display:block;position:fixed;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 56px);background:var(--black);border-bottom:1px solid var(--line);opacity:0;z-index:5;pointer-events:none}
-  html.nm .nm-mark{display:block;position:fixed;left:0;top:0;z-index:6;border:0;pointer-events:none}
-  html.nm .nm-mark.home{pointer-events:auto}
-  html.nm .nm-mark svg{position:absolute;left:0;top:0;max-width:none;max-height:none;transform-origin:0 0;overflow:visible}
-  html.nm .nm-mark{width:0;height:0;overflow:visible}
-}
-@media (max-width:640px) and (prefers-reduced-motion:no-preference){
-  html.nm .nm-mark svg{animation:rise 1.1s cubic-bezier(.2,.7,.1,1) .1s backwards}
-}
+
+/* External project links: the title opens the official page in a new tab (design system: ExternalArrow) */
+.item .title a.ext-link{color:inherit;border:0;cursor:pointer}
+.item .title a.ext-link:focus-visible{outline:1px solid var(--white);outline-offset:6px}
+.item .ext{display:inline-block;font-size:.42em;font-weight:500;margin-left:.35em;vertical-align:.95em;
+  opacity:0;translate:-.3em .3em;transition:opacity .35s ease,translate .5s cubic-bezier(.2,.7,.1,1)}
+.list.is-active .item.on .ext,.item .title a.ext-link:focus-visible .ext{opacity:1;translate:0 0}
+@media (hover:none){.item .ext{opacity:.55;translate:0 0}}
+/* phones: the iF link underlines only its own words */
+@media (max-width:640px){.item .sub a{align-self:flex-start}}
+
+/* phones: nav and languages live in the menu (site-ui.js) */
+@media (max-width:640px){.bar nav,.bar .lang{display:none}}
 </style>
 </head>
 <body data-view="work">
@@ -333,6 +332,7 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
   <header class="bar">
     <nav aria-label="Main">
       <a href="cv.html" data-nav="cv" data-i18n="nav.cv">CV</a>
+      <a href="/notes/" data-nav="notes" data-i18n="nav.notes">Design Notes</a>
       <a href="https://www.linkedin.com/in/dijie-lian/" target="_blank" rel="noopener">LinkedIn</a>
       <a id="mail" data-u="nail.eijid" data-d="moc.liamg">dijie.lian [at] gmail.com</a>
     </nav>
@@ -358,16 +358,16 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
         <h2 class="h" data-i18n="work.h">Selected work</h2>
         <ul class="list" id="list">
           <!-- Each project: title, keyword (what it is), and an award or the role -->
-          <li class="item" tabindex="0" data-img="agile-one">
-            <span class="title">Agile ONE</span>
+          <li class="item" data-img="agile-one">
+            <span class="title"><a class="ext-link" href="https://www.agile-robots.com/en/products/agile-one/" target="_blank" rel="noopener">Agile ONE<span class="ext" aria-hidden="true">↗</span></a></span>
             <span class="sub"><span data-i18n="p1.kw">Industrial humanoid robot</span><a href="https://ifdesign.com/en/winner-ranking/project/agile-one/763555" target="_blank" rel="noopener">iF Design Award 2026</a></span>
           </li>
           <li class="item" tabindex="0" data-img="bar01">
             <span class="title">BAR&nbsp;01</span>
             <span class="sub"><span data-i18n="p2.kw">Industrial dual-arm robot platform</span><span data-i18n="p2.role">Lead designer</span></span>
           </li>
-          <li class="item" tabindex="0" data-img="devkit">
-            <span class="title">plyon DevKit</span>
+          <li class="item" data-img="devkit">
+            <span class="title"><a class="ext-link" href="https://www.tacterion.com/product/devkit" target="_blank" rel="noopener">plyon DevKit<span class="ext" aria-hidden="true">↗</span></a></span>
             <span class="sub"><span data-i18n="p3.kw">Tactile sensor development kit</span><span data-i18n="p3.role">Lead designer &amp; product owner</span></span>
           </li>
           <li class="item" tabindex="0" data-img="newtrit">
@@ -416,7 +416,7 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
   var T={
     en:{
       "credit":"© 2026. Designed by Dijie Lian. Built with Claude.",
-      "nav.work":"Work","cv.lede":"Industrial designer with nearly ten years of experience across agency and in-house teams in China and Germany, now focused on humanoid and collaborative robots.","r.ar":"Industrial Designer","d.ar":"Industrial design for humanoid and industrial robots, exploring new forms, technologies and experiences. Robotics gives the basics of design new meanings, and with them new opportunities and challenges: understanding how design innovation shapes the technology itself, the task and the scenario, and most importantly, how it affects the people who interact with robots: ourselves.","org.tgs":"TGS Design Consultancy","r.tc":"Product Designer","d.tc":"Industrial and UX design for tactile sensor products, together with packaging, web and exhibition design, through prototyping and small-batch production.","r.ag":"UX Design Intern","city.stg":"Stuttgart area","r.tgs":"Industrial Designer, later Design Manager","d.tgs":"Product design for home appliance and point-of-sale clients, including Midea, Tonne and PAX.","e.ma":"MA Industrial Design, Medical Design","e.ma.o":"Muthesius Kunsthochschule, Kiel","e.ba":"BA Industrial Design, Product Design","e.ba.o":"Dalian Jiaotong University, Dalian","cv.proj":"Projects","title.cv":"CV | Dijie Lian, Industrial Designer","nav.cv":"CV","nav.contact":"Contact",
+      "nav.work":"Work","nav.notes":"Design Notes","cv.lede":"Industrial designer with nearly ten years of experience across agency and in-house teams in China and Germany, now focused on humanoid and collaborative robots.","r.ar":"Industrial Designer","d.ar":"Industrial design for humanoid and industrial robots, exploring new forms, technologies and experiences. Robotics gives the basics of design new meanings, and with them new opportunities and challenges: understanding how design innovation shapes the technology itself, the task and the scenario, and most importantly, how it affects the people who interact with robots: ourselves.","org.tgs":"TGS Design Consultancy","r.tc":"Product Designer","d.tc":"Industrial and UX design for tactile sensor products, together with packaging, web and exhibition design, through prototyping and small-batch production.","r.ag":"UX Design Intern","city.stg":"Stuttgart area","r.tgs":"Industrial Designer, later Design Manager","d.tgs":"Product design for home appliance and point-of-sale clients, including Midea, Tonne and PAX.","e.ma":"MA Industrial Design, Medical Design","e.ma.o":"Muthesius Kunsthochschule, Kiel","e.ba":"BA Industrial Design, Product Design","e.ba.o":"Dalian Jiaotong University, Dalian","cv.proj":"Projects","title.cv":"CV | Dijie Lian, Industrial Designer","nav.cv":"CV","nav.contact":"Contact",
       "tag":"A designer.",
       "about":"Currently busy designing humanoid and collaborative robots.",
       "work.h":"Selected work","p1.kw":"Industrial humanoid robot","p2.kw":"Industrial dual-arm robot platform","p3.kw":"Tactile sensor development kit","where":"Based in Munich","p2.role":"Lead designer","p3.role":"Lead designer & product owner","p4.kw":"Personal nutrition system","p4.role":"Master's thesis",
@@ -434,7 +434,7 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
     },
     de:{
       "credit":"© 2026. Gestaltet von Dijie Lian. Umgesetzt mit Claude.",
-      "nav.work":"Arbeiten","cv.lede":"Industriedesigner mit fast zehn Jahren Erfahrung in Agentur- und Inhouse-Teams in China und Deutschland, heute mit Schwerpunkt auf humanoiden und kollaborativen Robotern.","r.ar":"Industrial Designer","d.ar":"Industriedesign für humanoide und industrielle Roboter: neue Formen, Technologien und Nutzungserlebnisse. Die Robotik gibt den Grundlagen des Designs eine neue Bedeutung und bringt damit neue Chancen und Herausforderungen: zu verstehen, wie Designinnovation die Technologie selbst, die Aufgabe und das Szenario prägt, und vor allem, was sie für die Menschen bedeutet, die mit Robotern umgehen: für uns selbst.","org.tgs":"TGS Design Consultancy","r.tc":"Product Designer","d.tc":"Industrie- und UX-Design für taktile Sensorprodukte, dazu Verpackungs-, Web- und Messedesign, bis hin zu Prototyping und Kleinserienfertigung.","r.ag":"UX Design Praktikant","city.stg":"Raum Stuttgart","r.tgs":"Industrial Designer, später Design Manager","d.tgs":"Produktdesign für Kunden aus Haushaltsgeräten und Point of Sale, u. a. Midea, Tonne und PAX.","e.ma":"MA Industriedesign, Medizindesign","e.ma.o":"Muthesius Kunsthochschule, Kiel","e.ba":"BA Industriedesign, Produktdesign","e.ba.o":"Dalian Jiaotong University, Dalian","cv.proj":"Projekte","title.cv":"Lebenslauf | Dijie Lian, Industriedesigner","nav.cv":"Lebenslauf","nav.contact":"Kontakt",
+      "nav.work":"Arbeiten","nav.notes":"Designnotizen","cv.lede":"Industriedesigner mit fast zehn Jahren Erfahrung in Agentur- und Inhouse-Teams in China und Deutschland, heute mit Schwerpunkt auf humanoiden und kollaborativen Robotern.","r.ar":"Industrial Designer","d.ar":"Industriedesign für humanoide und industrielle Roboter: neue Formen, Technologien und Nutzungserlebnisse. Die Robotik gibt den Grundlagen des Designs eine neue Bedeutung und bringt damit neue Chancen und Herausforderungen: zu verstehen, wie Designinnovation die Technologie selbst, die Aufgabe und das Szenario prägt, und vor allem, was sie für die Menschen bedeutet, die mit Robotern umgehen: für uns selbst.","org.tgs":"TGS Design Consultancy","r.tc":"Product Designer","d.tc":"Industrie- und UX-Design für taktile Sensorprodukte, dazu Verpackungs-, Web- und Messedesign, bis hin zu Prototyping und Kleinserienfertigung.","r.ag":"UX Design Praktikant","city.stg":"Raum Stuttgart","r.tgs":"Industrial Designer, später Design Manager","d.tgs":"Produktdesign für Kunden aus Haushaltsgeräten und Point of Sale, u. a. Midea, Tonne und PAX.","e.ma":"MA Industriedesign, Medizindesign","e.ma.o":"Muthesius Kunsthochschule, Kiel","e.ba":"BA Industriedesign, Produktdesign","e.ba.o":"Dalian Jiaotong University, Dalian","cv.proj":"Projekte","title.cv":"Lebenslauf | Dijie Lian, Industriedesigner","nav.cv":"Lebenslauf","nav.contact":"Kontakt",
       "tag":"Ein Designer.",
       "about":"Gerade damit beschäftigt, humanoide und kollaborative Roboter zu gestalten.",
       "work.h":"Ausgewählte Arbeiten","p1.kw":"Industrieller humanoider Roboter","p2.kw":"Industrielle Zweiarm-Roboterplattform","p3.kw":"Entwicklungskit für taktile Sensorik","where":"Lebt in München","p2.role":"Lead Designer","p3.role":"Lead Designer & Product Owner","p4.kw":"Persönliches Ernährungssystem","p4.role":"Masterarbeit",
@@ -452,7 +452,7 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
     },
     zh:{
       "credit":"© 2026。设计：Dijie Lian，与 Claude 共同搭建。",
-      "nav.work":"作品","cv.lede":"工业设计师，近十年经验，先后在中国和德国的设计公司与企业内部团队工作，目前专注人形与协作机器人。","r.ar":"工业设计师","d.ar":"人形与工业机器人的工业设计，探索新的形态、技术与体验。机器人赋予了设计的基本要素新的含义，也带来了新的机遇与挑战：理解设计创新如何影响技术本身、要完成的任务与使用场景，而最关键的，是它如何影响与机器人打交道的人，也就是我们自己。","org.tgs":"正钧尚设计咨询","r.tc":"产品设计师","d.tc":"触觉传感器产品的工业设计与用户体验设计，以及包装、网页与展会设计，并负责原型制作与小批量生产。","r.ag":"UX 设计实习生","city.stg":"斯图加特地区","r.tgs":"工业设计师，后任设计经理","d.tgs":"为家电与收银终端客户提供产品设计，客户包括美的、天际与百富。","e.ma":"工业设计硕士，医疗设计方向","e.ma.o":"基尔穆特修斯艺术学院","e.ba":"工业设计学士，产品设计方向","e.ba.o":"大连交通大学","cv.proj":"项目","title.cv":"简历｜Dijie Lian，工业设计师","nav.cv":"简历","nav.contact":"联系",
+      "nav.work":"作品","nav.notes":"设计笔记","cv.lede":"工业设计师，近十年经验，先后在中国和德国的设计公司与企业内部团队工作，目前专注人形与协作机器人。","r.ar":"工业设计师","d.ar":"人形与工业机器人的工业设计，探索新的形态、技术与体验。机器人赋予了设计的基本要素新的含义，也带来了新的机遇与挑战：理解设计创新如何影响技术本身、要完成的任务与使用场景，而最关键的，是它如何影响与机器人打交道的人，也就是我们自己。","org.tgs":"正钧尚设计咨询","r.tc":"产品设计师","d.tc":"触觉传感器产品的工业设计与用户体验设计，以及包装、网页与展会设计，并负责原型制作与小批量生产。","r.ag":"UX 设计实习生","city.stg":"斯图加特地区","r.tgs":"工业设计师，后任设计经理","d.tgs":"为家电与收银终端客户提供产品设计，客户包括美的、天际与百富。","e.ma":"工业设计硕士，医疗设计方向","e.ma.o":"基尔穆特修斯艺术学院","e.ba":"工业设计学士，产品设计方向","e.ba.o":"大连交通大学","cv.proj":"项目","title.cv":"简历｜Dijie Lian，工业设计师","nav.cv":"简历","nav.contact":"联系",
       "tag":"一名设计师。",
       "about":"最近在忙着设计人形机器人和协作机器人。",
       "work.h":"精选作品","p1.kw":"工业人形机器人","p2.kw":"工业双臂机器人平台","p3.kw":"触觉传感器开发套件","where":"现居慕尼黑","p2.role":"主设计师","p3.role":"主设计师兼产品负责人","p4.kw":"个人营养系统","p4.role":"硕士毕业设计",
@@ -610,81 +610,6 @@ dialog form button{border:1px solid #333;padding:.45rem 1rem}
   });
 })();
 </script>
-<div class="nm-ground" aria-hidden="true"></div>
-<a class="nm-mark" href="index.html" aria-hidden="true" tabindex="-1"><svg><g fill="#E2E2E2"></g></svg></a>
-<script>
-/* Phone only: DIJIE LIAN folds into the DL mark while you scroll, and unfolds when you scroll back.
-   IJIE and IAN retract into D and L together; the D lifts its bowl; the L rises under it and its stem
-   joins the D's. The mark ends 28px high in a 56px bar. Curve: ease-glide. */
-(function(){
-  var phone=matchMedia('(max-width:640px)'),reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  var NS='http://www.w3.org/2000/svg',H=320,T=64,HB=60,TA=68,GAP=28,LOGO_W=286,FOOT_W=278,MARK=28,BAR=56;
-  var cl=function(v){return Math.min(1,Math.max(0,v))},lerp=function(a,b,t){return a+(b-a)*t};
-  var io=function(x){return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
-  var h1=document.getElementById('name'),link=document.querySelector('.nm-mark'),svg=link.querySelector('svg'),g=svg.querySelector('g'),ground=document.querySelector('.nm-ground');
-  var built=false,FS,P,asc,cap,bearD,dR0,foot0,strips,dP,lP,range,safeTop;
-  function add(tag,a,parent){var e=document.createElementNS(NS,tag);for(var k in a)e.setAttribute(k,a[k]);(parent||g).appendChild(e);return e}
-  function build(){
-    var c=document.createElement('canvas').getContext('2d');c.font='720 1000px Archivo';if('fontStretch' in c)c.fontStretch='expanded';
-    var mI=c.measureText('I'),mD=c.measureText('D');
-    cap=mI.actualBoundingBoxAscent/1000;FS=H/cap;                           // font size (in mark units) whose cap height is 320
-    asc=(mD.fontBoundingBoxAscent||930)/1000;var desc=(mD.fontBoundingBoxDescent||240)/1000;
-    var lead=(0.84-(asc+desc))/2;asc=lead+asc;                                // baseline below the line top, in em (line-height .84)
-    var sty='font:720 '+FS+'px Archivo;font-stretch:125%';
-    var adv=function(ch){var t=add('text',{style:sty});t.textContent=ch;var w=t.getComputedTextLength();t.remove();return w};
-    var track=-0.025*FS;bearD=-mD.actualBoundingBoxLeft/1000*FS;var sb=0.055*H;
-    dR0=adv('D')+track-2*sb;foot0=adv('L')+track-2*sb;P=0.84*FS;
-    var defs=add('defs',{});
-    strips=[['I','J','I','E'],['I','A','N']].map(function(w,n){
-      var cp=add('clipPath',{id:'nmc'+n,clipPathUnits:'userSpaceOnUse'},defs),r=add('rect',{y:-2*H,height:5*H,width:99999},cp);
-      var outer=add('g',{'clip-path':'url(#nmc'+n+')'}),inner=add('g',{},outer),x=0;
-      w.forEach(function(ch){var e=add('text',{x:x,y:H,style:sty},inner);e.textContent=ch;x+=adv(ch)+track});
-      return{r:r,inner:inner,outer:outer,w:x,sb:sb};
-    });
-    dP=add('path',{'fill-rule':'evenodd'});lP=add('path',{});
-    var W=Math.max(dR0+sb+strips[0].w,foot0+sb+strips[1].w);
-    svg.setAttribute('viewBox','0 0 '+W+' '+(P+H));svg.style.width=W+'px';svg.style.height=(P+H)+'px';
-    built=true;
-  }
-  var k0,xName,yNameDoc,pad,last=-1;
-  function measure(){                                                         // layout is read only here (load, resize), never while scrolling
-    safeTop=parseFloat(getComputedStyle(document.documentElement).paddingTop)||0;
-    var r=h1.getBoundingClientRect(),fsPx=parseFloat(getComputedStyle(h1).fontSize);
-    range=(r.top+scrollY)+r.height*0.85;
-    k0=fsPx/FS;xName=r.left+bearD*k0;yNameDoc=r.top+scrollY+(asc-cap)*fsPx;
-    pad=parseFloat(getComputedStyle(document.querySelector('.page')).paddingLeft);
-    last=-1;
-  }
-  function draw(){
-    if(!built||!phone.matches)return;
-    var p=cl(scrollY/range);if(reduce.matches)p=p<.5?0:1;
-    if(p===last&&p===1)return;last=p;                                        // folded and staying folded: nothing to redraw
-    var sI=io(cl(p/.45)),jb=io(cl((p-.22)/.4)),jl=io(cl((p-.3)/.62)),sb=strips[0].sb;
-    var yb=lerp(H,H-HB-GAP,jb),dR=lerp(dR0,LOGO_W,jb),R=yb/2,xa=dR-R,ri=(yb-2*HB)/2,xi=dR-TA-ri;
-    dP.setAttribute('d','M0 0 H'+xa+' A'+R+' '+R+' 0 0 1 '+xa+' '+yb+' H'+T+' V'+H+' H0 Z M'+T+' '+HB+' H'+xi+' A'+ri+' '+ri+' 0 0 1 '+xi+' '+(yb-HB)+' H'+T+' Z');
-    var ly=lerp(P,0,jl),fw=lerp(foot0,FOOT_W,jl);
-    lP.setAttribute('d','M0 '+ly+' H'+T+' V'+(ly+H-HB)+' H'+fw+' V'+(ly+H)+' H0 Z');
-    [[dR0+sb,0],[fw+sb*(1-jl),ly]].forEach(function(a,n){var s=strips[n],vis=s.w*(1-sI);
-      s.r.setAttribute('x',a[0]);s.inner.setAttribute('transform','translate('+(a[0]+vis-s.w)+' '+a[1]+')');s.outer.style.opacity=Math.pow(vis/s.w,1.3)});
-    // from the name's place to the bar
-    var y0=yNameDoc-scrollY;                                                  // where the real name's cap top sits now
-    var q=io(p),k=lerp(k0,MARK/H,q),yBar=safeTop+(BAR-MARK)/2;
-    var y=lerp(Math.max(y0,yBar),yBar,q),x=lerp(xName,pad,q);
-    svg.style.transform='translate('+x+'px,'+y+'px) scale('+k+')';
-    ground.style.opacity=cl((p-.6)/.4);
-    link.classList.toggle('home',p>.9);
-  }
-  var raf=0;function tick(){raf=0;draw()}
-  function onScroll(){if(!raf)raf=requestAnimationFrame(tick)}
-  function setup(){
-    var on=phone.matches;document.documentElement.classList.toggle('nm',on);
-    if(!on)return;
-    document.fonts.load('720 100px Archivo').then(function(){if(!built)build();measure();draw()});
-  }
-  addEventListener('scroll',onScroll,{passive:true});
-  addEventListener('resize',function(){if(phone.matches&&built){measure();draw()}});
-  phone.addEventListener('change',setup);setup();
-})();
-</script>
+<script src="/site-ui.js" defer></script>
 </body>
 </html>
